@@ -1,0 +1,6 @@
+build/
+*.pbw
+.lock-waf*
+.DS_Store
+# local config (web-app URL + shared secret) — never commit
+src/pkjs/config.js

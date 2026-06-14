@@ -1,0 +1,23 @@
+{
+  "name": "voice-notes",
+  "author": "DHRME",
+  "version": "1.0.0",
+  "license": "MIT",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Voice Notes",
+    "uuid": "81fe5c7c-1b0a-4028-b0f9-e03d7a641367",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": ["emery"],
+    "watchapp": {
+      "watchface": false
+    },
+    "messageKeys": ["NoteText", "CalOk", "CalMsg"],
+    "resources": {
+      "media": []
+    }
+  }
+}

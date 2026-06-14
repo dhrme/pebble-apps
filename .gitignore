@@ -1,0 +1,9 @@
+build/
+*.pbw
+.pebble/
+node_modules/
+.DS_Store
+.lock-waf*
+
+# Per-app local secrets/config (web-app URL + shared secret) — never commit
+voice-notes/src/pkjs/config.js
