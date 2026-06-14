@@ -1,36 +1,47 @@
-# energy
+# NL Energy
 
-A Pebble watchapp/watchface written in C using the Pebble SDK.
+A Pebble Time 2 watchapp showing **Dutch dynamic electricity prices** at a
+glance: the current price, a forward 24-hour graph, and the cheapest upcoming
+4-hour window — so you know when to run the dishwasher.
 
-## Building & running
+![NL Energy on the emery emulator](preview.png)
 
+> **Netherlands only.** Prices come from the public **EnergyZero** API (the data
+> behind several Dutch dynamic-tariff suppliers), shown in **ct/kWh including
+> BTW**. It is not useful outside the Dutch dynamic-tariff market. To adapt it to
+> another country, swap the API and price math in `src/pkjs/index.js`.
+
+## What's on screen
+- **Big number** — the current hour's price in ct/kWh, colour-coded green (cheap)
+  → yellow → red (expensive), with the current hour shown below it.
+- **Bar graph** — the next 24 hours, plus ~2h of past context (greyed out). Each
+  bar is colour-coded by price; the current hour's bar is outlined. The x-axis is
+  labelled relative to now: `now`, `+6`, `+12`, `+18`, and the total span on the
+  right.
+- **Green marker** — sits under the cheapest contiguous **4-hour** block.
+- **Footer** — that cheapest block's time window and its average price.
+
+## Controls
+- **SELECT** — refresh (re-fetches prices via the phone).
+
+## How it works
+No account, login, or API key. The phone side (`src/pkjs/index.js`) fetches the
+forward-24h hourly series from the public EnergyZero API, picks the cheapest 4h
+block, and sends a compact packet to the watch. The watch has no direct internet,
+so the phone must be connected.
+
+## Build & run
 ```sh
-pebble build                          # build for all targetPlatforms
-pebble install --emulator emery       # install on the emery emulator
-pebble install --phone <ip>           # install to a paired phone
+pebble build
+pebble install --emulator emery       # run in the emery emulator
+pebble install --phone <phone-ip>     # sideload to a paired watch (dev connection)
 ```
+For the end-user (no toolchain) install path, see the [repo README](../README.md#install).
 
-## Target platforms
-
-`targetPlatforms` in `package.json` controls which watches you build for. The
-modern Pebble hardware is **emery** (Pebble Time 2), **gabbro** (Pebble Round
-2), and **flint** (Pebble 2 Duo); the original Pebble platforms (aplite,
-basalt, chalk, diorite) are included by default for backwards compatibility.
-
-## Project layout
-
-```
-src/c/           C source for the watchapp
-src/pkjs/        PebbleKit JS (phone-side) source, if any
-worker_src/c/    Background worker source, if any
-resources/       Images, fonts, and other bundled resources
-package.json     Project metadata (UUID, platforms, resources, message keys)
-wscript          Build rules — usually no need to edit
-```
-
-By default this project is configured as a watchapp. To make it a watchface,
-set `pebble.watchapp.watchface` to `true` in `package.json`.
+## Platforms
+Targets **emery** (Pebble Time 2) only — the layout is tuned for its 200×228
+screen. To build for other Pebble watches, add them to `targetPlatforms` in
+`package.json` and expect to adjust the graph geometry.
 
 ## Documentation
-
-Full SDK docs, tutorials, and API reference: <https://developer.repebble.com>
+Pebble SDK docs and API reference: <https://developer.repebble.com>
