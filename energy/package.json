@@ -1,10 +1,12 @@
 {
   "name": "energy",
   "author": "DHRME",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": ["pebble-app"],
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "pebble-clay": "^1.0.4"
+  },
   "pebble": {
     "displayName": "NL Energy",
     "uuid": "ca113998-52bb-42a6-a8bf-505c8737e17a",
@@ -12,7 +14,7 @@
     "enableMultiJS": true,
     "targetPlatforms": ["emery"],
     "watchapp": {
-      "watchface": false
+      "watchface": true
     },
     "messageKeys": [
       "NowPriceM",
@@ -27,7 +29,9 @@
       "BestAvgM",
       "Series",
       "Err",
-      "Refresh"
+      "Refresh",
+      "CfgLayout",
+      "CfgTap"
     ],
     "resources": {
       "media": []

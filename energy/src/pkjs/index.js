@@ -3,6 +3,10 @@
 // forward-24h hourly series, finds the cheapest contiguous 4h block, and
 // sends a compact packet to the watch.
 
+var Clay = require('pebble-clay');
+var clayConfig = require('./config');
+var clay = new Clay(clayConfig);   // auto-handles config page + sends settings to the watch
+
 var API = 'https://api.energyzero.nl/v1/energyprices';
 
 function pad(n) { return (n < 10 ? '0' : '') + n; }

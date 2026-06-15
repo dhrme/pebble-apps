@@ -9,7 +9,7 @@ under the MIT license — fork, build, and sideload freely.
 
 | App | What it does |
 |---|---|
-| [**NL Energy**](energy/) | Shows the current Dutch dynamic electricity price, a 24-hour forward graph, and the cheapest contiguous 4-hour window. Pulls live prices from the public EnergyZero API — no account or key. |
+| [**NL Energy**](energy/) | A **watchface** showing the time + date alongside the current Dutch dynamic electricity price, a 24-hour forward graph, and the cheapest contiguous 4-hour window. Three tap-switchable layouts. Pulls live prices from the public EnergyZero API — no account or key. |
 | [**Voice Notes**](voice-notes/) | Dictate a quick note on the watch; keep a running list. Optionally bridges a note to Google Calendar via a tiny self-hosted Google Apps Script (your own deployment, your own shared secret — see [`voice-notes/bridge/`](voice-notes/bridge/)). |
 
 Each app has its own `README.md` with build and setup details.
