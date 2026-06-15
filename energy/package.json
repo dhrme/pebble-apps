@@ -8,7 +8,7 @@
     "pebble-clay": "^1.0.4"
   },
   "pebble": {
-    "displayName": "NL Energy",
+    "displayName": "Dutch Energy Watchface",
     "uuid": "ca113998-52bb-42a6-a8bf-505c8737e17a",
     "sdkVersion": "3",
     "enableMultiJS": true,
