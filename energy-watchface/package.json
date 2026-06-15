@@ -1,18 +1,18 @@
 {
-  "name": "energy",
+  "name": "energy-watchface",
   "author": "DHRME",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": ["pebble-app"],
   "private": true,
   "dependencies": {},
   "pebble": {
-    "displayName": "NL Energy",
-    "uuid": "ca113998-52bb-42a6-a8bf-505c8737e17a",
+    "displayName": "Dutch Energy Watchface",
+    "uuid": "c3fc393c-89ad-4960-9c16-595d65d7389e",
     "sdkVersion": "3",
     "enableMultiJS": true,
     "targetPlatforms": ["emery"],
     "watchapp": {
-      "watchface": false
+      "watchface": true
     },
     "messageKeys": [
       "NowPriceM",

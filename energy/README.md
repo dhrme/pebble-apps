@@ -1,9 +1,8 @@
 # NL Energy
 
-A Pebble Time 2 **watchface** showing **Dutch dynamic electricity prices** next
-to the time and date: the current price, a forward 24-hour graph, and the
-cheapest upcoming 4-hour window — so it earns its place as your default face and
-tells you when to run the dishwasher.
+A Pebble Time 2 watchapp showing **Dutch dynamic electricity prices** at a
+glance: the current price, a forward 24-hour graph, and the cheapest upcoming
+4-hour window — so you know when to run the dishwasher.
 
 ![NL Energy on the emery emulator](preview.png)
 
@@ -12,27 +11,18 @@ tells you when to run the dishwasher.
 > BTW**. It is not useful outside the Dutch dynamic-tariff market. To adapt it to
 > another country, swap the API and price math in `src/pkjs/index.js`.
 
-## Layouts
-The face has **three layouts** you cycle through with a **tap / wrist-shake**;
-your choice is remembered:
-- **Clock hero** — large time + date up top, then a price line, the 24h graph,
-  and the cheapest-block footer.
-- **Price frame** — the screen border is tinted by the current price (green →
-  red), so you can read "cheap or expensive" from across the room; clock, date,
-  and a slim graph sit inside.
-- **Minimal** — just the time, full date, the current price, and the cheapest
-  window. No graph.
+## What's on screen
+- **Big number** — the current hour's price in ct/kWh, colour-coded green (cheap)
+  → yellow → red (expensive), with the current hour shown below it.
+- **Bar graph** — the next 24 hours, plus ~2h of past context (greyed out). Each
+  bar is colour-coded by price; the current hour's bar is outlined. The x-axis is
+  labelled relative to now: `now`, `+6`, `+12`, `+18`, and the total span on the
+  right.
+- **Green marker** — sits under the cheapest contiguous **4-hour** block.
+- **Footer** — that cheapest block's time window and its average price.
 
-The colour coding, 24h bar graph (with ~2h of greyed past context, the current
-hour outlined, and a green marker under the cheapest contiguous **4-hour**
-block), and the cheapest-block footer are shared across the graph layouts.
-
-## Controls & settings
-- **Tap / shake** — switch layout (clock-hero → price-frame → minimal).
-- Open the watchface **settings** in the Pebble phone app to pick the startup
-  layout and turn tap-to-switch on/off.
-- There is no refresh button (watchfaces have no buttons): prices refresh
-  automatically when the face loads and at the top of every hour.
+## Controls
+- **SELECT** — refresh (re-fetches prices via the phone).
 
 ## How it works
 No account, login, or API key. The phone side (`src/pkjs/index.js`) fetches the
