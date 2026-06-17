@@ -34,26 +34,26 @@ no OAuth client, consent screen, or tokens to manage; it just calls `CalendarApp
 
 ## Setup
 
-**1. Configure the phone-side bridge**
-```sh
-cd src/pkjs
-cp config.example.js config.js      # config.js is gitignored
-```
-Edit `config.js`:
-- `SHARED_SECRET` — any random string (`openssl rand -hex 12`)
-- `SCRIPT_URL` — fill in after step 2
+No build-time config — the shipped `.pbw` is configured from the app's
+**Settings** screen, so it works for anyone.
 
-**2. Deploy the Google Calendar bridge**
+**1. Deploy your Google Calendar bridge** (once)
 Follow [`bridge/README.md`](bridge/README.md): paste `bridge/Code.gs` into a new
-[Apps Script](https://script.google.com) project, set its `SHARED_SECRET` to the
-**same** value as `config.js`, run `authorize` once, deploy as a **Web app**
-(*Execute as: Me*, *Who has access: Anyone*), and copy the `/exec` URL into
-`config.js` as `SCRIPT_URL`.
+[Apps Script](https://script.google.com) project, set a `SHARED_SECRET`, run
+`authorize` once, deploy as a **Web app** (*Execute as: Me*, *Who has access:
+Anyone*), and copy the `/exec` URL.
 
-**3. Build & run**
+**2. Connect it in the app**
+Pebble phone app → **Voice Notes** → gear / **Settings**. Paste your `/exec` URL
+into **Bridge URL** and the matching secret into **Shared secret** (tap
+**Generate** to mint one, then set the *same* value as `SHARED_SECRET` in your
+`Code.gs`). Save. Notes dictated on the watch now land on your calendar.
+
+**Build & run (dev)**
 ```sh
 pebble build
-pebble install --emulator emery     # run in the emulator
+pebble install --emulator emery     # run in the emulator; set URL/secret via
+                                    # `pebble emu-app-config` (or sideload to a watch)
 # or sideload build/voice-notes.pbw onto a real Pebble Time 2
 ```
 

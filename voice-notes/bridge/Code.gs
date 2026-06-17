@@ -4,8 +4,11 @@
  * Runs as YOU, so there is no OAuth client / consent-screen setup and no token
  * juggling — it just calls CalendarApp. See bridge/README.md for deploy steps.
  *
- * Receives POST JSON { secret, text }, parses a date/time out of the spoken
- * text, and creates a Calendar event (timed, or all-day if no time is found).
+ * Accepts GET (?secret=...&text=...) or POST (JSON { secret, text }), parses a
+ * date/time out of the spoken text, and creates a Calendar event (timed, or
+ * all-day if no time is found). The watch uses GET: Apps Script 302-redirects
+ * its response, and the phone's XMLHttpRequest follows a GET redirect correctly
+ * but not a POST one (that showed up on the watch as "Bad response").
  */
 
 var SHARED_SECRET = 'PASTE_A_RANDOM_SECRET_HERE';   // must match SHARED_SECRET in src/pkjs/config.js
@@ -16,12 +19,22 @@ function authorize() {
   Logger.log(CalendarApp.getDefaultCalendar().getName());
 }
 
-function doPost(e) {
-  try {
-    var body = JSON.parse(e.postData.contents);
-    if (body.secret !== SHARED_SECRET) return json({ ok: false, error: 'bad secret' });
+// The watch app calls this via GET: /exec?secret=...&text=...
+function doGet(e) {
+  return handle(e.parameter.secret, e.parameter.text);
+}
 
-    var text = (body.text || '').trim();
+// POST (JSON { secret, text }) also works, e.g. for curl testing.
+function doPost(e) {
+  var body = {};
+  try { body = JSON.parse(e.postData.contents); } catch (err) {}
+  return handle(body.secret, body.text);
+}
+
+function handle(secret, text) {
+  try {
+    if (secret !== SHARED_SECRET) return json({ ok: false, error: 'bad secret' });
+    text = (text || '').trim();
     if (!text) return json({ ok: false, error: 'empty' });
 
     var p = parseWhen(text);
