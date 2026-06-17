@@ -1,0 +1,37 @@
+{
+  "name": "atelier",
+  "author": "dhrme",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Atelier",
+    "uuid": "666d6ac7-aa22-4882-a714-27968ad389fd",
+    "sdkVersion": "3",
+    "enableMultiJS": false,
+    "targetPlatforms": ["emery"],
+    "watchapp": {
+      "watchface": true
+    },
+    "messageKeys": [
+      "dummy"
+    ],
+    "resources": {
+      "media": [
+        {
+          "type": "font",
+          "name": "FONT_JOST_DATE_18",
+          "file": "fonts/Jost-Medium.ttf",
+          "characterRegex": "[A-Z0-9 ]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_LORA_DATE_18",
+          "file": "fonts/Lora-Medium.ttf",
+          "characterRegex": "[A-Z0-9 ]"
+        }
+      ]
+    }
+  }
+}
