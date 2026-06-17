@@ -26,97 +26,110 @@ static void fmt_ct(int m, char *buf, size_t n) {
   snprintf(buf, n, "%s%d.%d", neg ? "-" : "", a / 10, a % 10);
 }
 
-// Coarse low/medium/high band for the current price within today's range.
-static int price_level(void) {
+// Price tier of a single value within today's range: 0 cheap / 1 normal / 2 pricey.
+static int tier_of(int m) {
   if (s_max_m <= s_min_m) return 1;
-  int t = (s_now_m - s_min_m) * 100 / (s_max_m - s_min_m);
+  int t = (m - s_min_m) * 100 / (s_max_m - s_min_m);
   if (t < 34) return 0;
   if (t < 67) return 1;
   return 2;
 }
-static GColor level_color(int lv) { return lv == 0 ? GColorGreen : (lv == 1 ? GColorOrange : GColorRed); }
-static GColor level_tint(int lv)  { return lv == 0 ? GColorMintGreen : (lv == 1 ? GColorPastelYellow : GColorMelon); }
+static int  price_level(void)   { return tier_of(s_now_m); }
+static GColor tier_color(int lv){ return lv == 0 ? GColorGreen : (lv == 1 ? GColorOrange : GColorRed); }
 
-static void draw_loading(GContext *ctx, GRect b, int y) {
-  const char *msg = s_err[0] ? s_err : "Loading…";
-  graphics_context_set_text_color(ctx, GColorBlack);
-  graphics_draw_text(ctx, msg, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD),
-    GRect(8, y, b.size.w - 16, 60), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+// Big clock, centered up top — the hero.
+static void draw_clock(GContext *ctx, GRect b) {
+  graphics_context_set_text_color(ctx, GColorWhite);
+  graphics_draw_text(ctx, s_time, fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49),
+    GRect(0, 12, b.size.w, 54), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
 }
 
-// Shared top row: date (left) + iPhone-style battery (right).
-static void draw_topbar(GContext *ctx, GRect b, struct tm *tt) {
-  char date[16];
-  strftime(date, sizeof date, "%a %e %b", tt);
-  graphics_context_set_text_color(ctx, GColorDarkGray);
-  graphics_draw_text(ctx, date, fonts_get_system_font(FONT_KEY_GOTHIC_14),
-    GRect(8, 1, 110, 16), GTextOverflowModeFill, GTextAlignmentLeft, NULL);
-
+// Battery (red only below 7% — the watch lasts days) + date, bottom strip.
+static void draw_bottombar(GContext *ctx, GRect b, struct tm *tt) {
   BatteryChargeState bat = battery_state_service_peek();
   int pct = bat.charge_percent;
-  char bs[8];
-  snprintf(bs, sizeof bs, "%d%%", pct);
-  int iw = 22, ih = 11, ix = b.size.w - 12 - iw, iy = 3;
-  graphics_context_set_text_color(ctx, GColorDarkGray);
-  graphics_draw_text(ctx, bs, fonts_get_system_font(FONT_KEY_GOTHIC_14),
-    GRect(ix - 64, 1, 60, 16), GTextOverflowModeFill, GTextAlignmentRight, NULL);
-  graphics_context_set_stroke_color(ctx, GColorDarkGray);
+
+  int iw = 24, ih = 12, ix = 8, iy = 200;
+  graphics_context_set_stroke_color(ctx, GColorLightGray);
   graphics_draw_round_rect(ctx, GRect(ix, iy, iw, ih), 2);
-  graphics_context_set_fill_color(ctx, GColorDarkGray);
+  graphics_context_set_fill_color(ctx, GColorLightGray);
   graphics_fill_rect(ctx, GRect(ix + iw, iy + 3, 2, ih - 6), 0, GCornerNone);
   int fw = ((iw - 4) * pct) / 100;
   if (fw < 1 && pct > 0) fw = 1;
-  GColor fc = pct <= 20 ? GColorRed : (pct <= 40 ? GColorOrange : GColorGreen);
+  GColor fc = (pct <= 7) ? GColorRed : GColorGreen;
   graphics_context_set_fill_color(ctx, fc);
   graphics_fill_rect(ctx, GRect(ix + 2, iy + 2, fw, ih - 4), 0, GCornerNone);
+
+  char bs[8];
+  snprintf(bs, sizeof bs, "%d%%", pct);
+  graphics_context_set_text_color(ctx, GColorWhite);
+  graphics_draw_text(ctx, bs, fonts_get_system_font(FONT_KEY_GOTHIC_14),
+    GRect(ix + iw + 8, iy - 3, 44, 18), GTextOverflowModeFill, GTextAlignmentLeft, NULL);
+
+  char date[16];
+  strftime(date, sizeof date, "%a %e %b", tt);
+  graphics_context_set_text_color(ctx, GColorLightGray);
+  graphics_draw_text(ctx, date, fonts_get_system_font(FONT_KEY_GOTHIC_14),
+    GRect(b.size.w - 108, iy - 3, 100, 18), GTextOverflowModeFill, GTextAlignmentRight, NULL);
 }
 
-static void draw_clock(GContext *ctx, GRect b, int y) {
-  graphics_context_set_text_color(ctx, GColorBlack);
-  graphics_draw_text(ctx, s_time, fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS),
-    GRect(0, y, b.size.w, 48), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
+static void draw_loading(GContext *ctx, GRect b) {
+  const char *msg = s_err[0] ? s_err : "Loading…";
+  graphics_context_set_text_color(ctx, GColorLightGray);
+  graphics_draw_text(ctx, msg, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD),
+    GRect(8, 110, b.size.w - 16, 60), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
 
-// LOW | MED | HIGH split scale; the current band is filled + outlined.
-static void draw_level_scale(GContext *ctx, GRect b, int lv) {
-  const char *labs[3] = {"LOW", "MED", "HIGH"};
-  int y = 96, h = 40, x0 = 16, gap = 4;
-  int sw = (b.size.w - 2 * x0 - 2 * gap) / 3;
-  for (int i = 0; i < 3; i++) {
-    int x = x0 + i * (sw + gap);
-    bool active = (i == lv);
-    graphics_context_set_fill_color(ctx, active ? level_color(i) : level_tint(i));
-    graphics_fill_rect(ctx, GRect(x, y, sw, h), 5, GCornersAll);
-    if (active) {
-      graphics_context_set_stroke_color(ctx, GColorBlack);
-      graphics_draw_round_rect(ctx, GRect(x, y, sw, h), 5);
-    }
-    graphics_context_set_text_color(ctx, active ? GColorWhite : GColorDarkGray);
-    graphics_draw_text(ctx, labs[i], fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),
-      GRect(x, y + 9, sw, 22), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
+// 180-degree rate dial: one arc segment per hour, colored by its price tier
+// (green cheap -> red peak), a bead at the current hour, and the live price in
+// the bowl. The day's shape — cheap midday valley, evening peak — reads at a glance.
+static void draw_gauge(GContext *ctx, GRect b) {
+  const int cx = b.size.w / 2, cy = 150, R = 70, th = 14;
+  GRect band = GRect(cx - R, cy - R, 2 * R, 2 * R);
+  int n = s_count; if (n < 1) n = 1;
+
+  for (int i = 0; i < n; i++) {
+    int a0 = 270 + (i * 180) / n;
+    int a1 = 270 + ((i + 1) * 180) / n;
+    if (n > 1) a1 -= 1;                       // hairline gap between hours
+    graphics_context_set_fill_color(ctx, tier_color(tier_of(s_series[i])));
+    graphics_fill_radial(ctx, band, GOvalScaleModeFitCircle, th,
+      DEG_TO_TRIGANGLE(a0), DEG_TO_TRIGANGLE(a1));
   }
-}
 
-// Current ct + the next cheap window.
-static void draw_bottom(GContext *ctx, GRect b) {
-  char pb[12], now[28];
+  // bead at the current hour, on the mid-line of the band
+  int an = 270 + ((2 * s_now_index + 1) * 90) / n;
+  int br = R - th / 2;
+  GPoint bp = gpoint_from_polar(GRect(cx - br, cy - br, 2 * br, 2 * br),
+    GOvalScaleModeFitCircle, DEG_TO_TRIGANGLE(an));
+  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_fill_circle(ctx, bp, 6);
+  graphics_context_set_fill_color(ctx, tier_color(price_level()));
+  graphics_fill_circle(ctx, bp, 3);
+
+  // live price + tier word in the bowl
+  int lv = price_level();
+  char pb[12];
   fmt_ct(s_now_m, pb, sizeof pb);
-  snprintf(now, sizeof now, "%s ct/kWh now", pb);
-  graphics_context_set_text_color(ctx, GColorBlack);
-  graphics_draw_text(ctx, now, fonts_get_system_font(FONT_KEY_GOTHIC_18),
-    GRect(4, 156, b.size.w - 8, 22), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
+  graphics_context_set_text_color(ctx, tier_color(lv));
+  graphics_draw_text(ctx, pb, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD),
+    GRect(0, 106, b.size.w, 32), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
+  const char *word = lv == 0 ? "cheap" : (lv == 1 ? "normal" : "pricey");
+  char sub[24];
+  snprintf(sub, sizeof sub, "ct/kWh · %s", word);
+  graphics_context_set_text_color(ctx, GColorLightGray);
+  graphics_draw_text(ctx, sub, fonts_get_system_font(FONT_KEY_GOTHIC_14),
+    GRect(0, 138, b.size.w, 18), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
 
-  int hu = s_best_start - s_now_index;
-  int bs = (s_start_hour + s_best_start) % 24;
-  char l1[28], l2[20];
-  if (hu <= 0) { snprintf(l1, sizeof l1, "Cheapest now"); snprintf(l2, sizeof l2, "right now"); }
-  else         { snprintf(l1, sizeof l1, "Cheap %02d:00", bs); snprintf(l2, sizeof l2, "in %dh", hu); }
-  graphics_context_set_text_color(ctx, GColorDarkGreen);
-  graphics_draw_text(ctx, l1, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),
-    GRect(4, 182, b.size.w - 8, 22), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
+  // hour labels at the two ends of the arc
+  char lh[6], rh[6];
+  snprintf(lh, sizeof lh, "%02d", s_start_hour % 24);
+  snprintf(rh, sizeof rh, "%02d", (s_start_hour + n - 1) % 24);
   graphics_context_set_text_color(ctx, GColorDarkGray);
-  graphics_draw_text(ctx, l2, fonts_get_system_font(FONT_KEY_GOTHIC_14),
-    GRect(4, 205, b.size.w - 8, 18), GTextOverflowModeFill, GTextAlignmentCenter, NULL);
+  graphics_draw_text(ctx, lh, fonts_get_system_font(FONT_KEY_GOTHIC_14),
+    GRect(4, 156, 28, 16), GTextOverflowModeFill, GTextAlignmentLeft, NULL);
+  graphics_draw_text(ctx, rh, fonts_get_system_font(FONT_KEY_GOTHIC_14),
+    GRect(b.size.w - 32, 156, 28, 16), GTextOverflowModeFill, GTextAlignmentRight, NULL);
 }
 
 static void canvas_update(Layer *layer, GContext *ctx) {
@@ -125,15 +138,13 @@ static void canvas_update(Layer *layer, GContext *ctx) {
   struct tm *tt = localtime(&now);
   strftime(s_time, sizeof s_time, clock_is_24h_style() ? "%H:%M" : "%I:%M", tt);
 
-  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_context_set_fill_color(ctx, GColorBlack);
   graphics_fill_rect(ctx, b, 0, GCornerNone);
-  draw_topbar(ctx, b, tt);
-  draw_clock(ctx, b, 26);
+  draw_clock(ctx, b);
+  draw_bottombar(ctx, b, tt);
 
-  if (!s_have_data) { draw_loading(ctx, b, 100); return; }
-
-  draw_level_scale(ctx, b, price_level());
-  draw_bottom(ctx, b);
+  if (!s_have_data) { draw_loading(ctx, b); return; }
+  draw_gauge(ctx, b);
 }
 
 static void request_refresh(void) {
@@ -205,7 +216,7 @@ static void window_unload(Window *window) {
 
 static void init(void) {
   s_window = window_create();
-  window_set_background_color(s_window, GColorWhite);
+  window_set_background_color(s_window, GColorBlack);
   window_set_window_handlers(s_window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
