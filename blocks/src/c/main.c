@@ -31,10 +31,10 @@ static void draw_band(GContext *ctx, int y, int h, GColor c) {
 
 static void update_proc(Layer *layer, GContext *ctx) {
   // --- colour bands ---
-  draw_band(ctx, 0,   30, GColorChromeYellow);  // day
+  draw_band(ctx, 0,   30, GColorYellow);        // day
   draw_band(ctx, 30,  28, GColorTiffanyBlue);   // date
   draw_band(ctx, 58,  82, GColorWhite);         // time
-  draw_band(ctx, 140, 40, GColorOxfordBlue);    // battery
+  draw_band(ctx, 140, 40, GColorBlue);          // battery
   draw_band(ctx, 180, 48, GColorOrange);        // temperature
 
   // --- day ---
@@ -68,8 +68,8 @@ static void update_proc(Layer *layer, GContext *ctx) {
   // hi (right)
   graphics_draw_text(ctx, s_hi, f_lbl, GRect(96, 184, 90, 20),
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
-  // lo (right, muted)
-  graphics_context_set_text_color(ctx, GColorWindsorTan);
+  // lo (right)
+  graphics_context_set_text_color(ctx, GColorBlack);
   graphics_draw_text(ctx, s_lo, f_lbl, GRect(96, 204, 90, 20),
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
 }
