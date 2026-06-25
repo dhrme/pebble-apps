@@ -1,7 +1,7 @@
 {
   "name": "energy",
   "author": "DHRME",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": ["pebble-app"],
   "private": true,
   "dependencies": {},
@@ -30,7 +30,9 @@
       "Refresh"
     ],
     "resources": {
-      "media": []
+      "media": [
+        { "type": "bitmap", "name": "IMAGE_MENU_ICON", "file": "images/icon.png", "menuIcon": true }
+      ]
     }
   }
 }
