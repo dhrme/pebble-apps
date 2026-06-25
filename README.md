@@ -11,6 +11,9 @@ released under the MIT license — fork, build, and sideload freely.
 |---|---|
 | [**NL Energy**](energy/) | A launchable **app**: the current Dutch dynamic electricity price (big, colour-coded), a 24-hour forward graph, and the cheapest contiguous 4-hour window. Pulls live prices from the public EnergyZero API — no account or key. |
 | [**Dutch Energy Watchface**](energy-watchface/) | A glanceable **watchface**: time + date + an iPhone-style battery, a LOW/MED/HIGH price split, the current ct, and the next cheap window. Same EnergyZero feed as NL Energy. |
+| [**Atelier**](atelier/) | A minimalist analog **watchface**: a clean white dial, black hands, a single orange marker at twelve, and a quiet lower band with date + battery. |
+| [**Bauhaus Blocks**](blocks/) | A bold colour-block **watchface**: five flat bands — weekday, date, a big clock, battery, and the current temperature with today's hi/lo. Live temp from [Open-Meteo](https://open-meteo.com) (no key). |
+| [**Kevinimal**](kevinimal/) | A minimalist **watchface**: large centred time on pure black, with day/date, a battery as three blocks, chance of rain, and current temp + hi/lo tucked into the corners. Open-Meteo (no key). |
 | [**Voice Notes**](voice-notes/) | Dictate a quick note on the watch; keep a running list. Optionally bridges a note to Google Calendar via a tiny self-hosted Google Apps Script (your own deployment, your own shared secret — see [`voice-notes/bridge/`](voice-notes/bridge/)). |
 
 Each app has its own `README.md` with build and setup details.
@@ -22,6 +25,11 @@ Each app has its own `README.md` with build and setup details.
    from the [**Releases**](../../releases) page.
 2. Open it with the Pebble (Core Devices) app on your phone — it sideloads onto a
    paired watch. Done; neither needs any configuration.
+
+### Atelier / Bauhaus Blocks / Kevinimal — prebuilt `.pbw` (no toolchain)
+Download the matching `.pbw` from the [**Releases**](../../releases) page and open
+it with the Pebble app. Atelier needs nothing; Bauhaus Blocks and Kevinimal pull
+live temperature from Open-Meteo over a connected phone (no account or key).
 
 ### Voice Notes — build it yourself
 There is **no** prebuilt Voice Notes `.pbw`: your private Google Calendar bridge
