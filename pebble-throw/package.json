@@ -1,0 +1,23 @@
+{
+  "name": "pebble-throw",
+  "author": "DHRME",
+  "version": "1.0.0",
+  "license": "MIT",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Pebble Throw",
+    "uuid": "e2f70a5f-3167-4038-89e1-ddbc64d93e11",
+    "sdkVersion": "3",
+    "enableMultiJS": false,
+    "targetPlatforms": ["emery"],
+    "watchapp": {
+      "watchface": false
+    },
+    "messageKeys": [],
+    "resources": {
+      "media": []
+    }
+  }
+}

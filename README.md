@@ -15,6 +15,7 @@ released under the MIT license — fork, build, and sideload freely.
 | [**Bauhaus Blocks**](blocks/) | A bold colour-block **watchface**: five flat bands — weekday, date, a big clock, battery, and the current temperature with today's hi/lo. Live temp from [Open-Meteo](https://open-meteo.com) (no key). 4 colour themes (Bauhaus / Noir / Pop / Earth) in Settings. |
 | [**Kevinimal**](kevinimal/) | A minimalist **watchface**: large centred time on pure black, with day/date, a battery as three blocks, chance of rain, and current temp + hi/lo tucked into the corners. Open-Meteo (no key). 4 colour themes (Kevin / Daylight / Amber / Mint) in Settings. |
 | [**Voice Notes**](voice-notes/) | Dictate a quick note on the watch; keep a running list. Optionally bridges a note to Google Calendar via a tiny self-hosted Google Apps Script (your own deployment, your own shared secret — see [`voice-notes/bridge/`](voice-notes/bridge/)). |
+| [**Pebble Throw**](pebble-throw/) | A one-button **game**: skip a Pebble-shaped stone across the pond. **Zen** mode is endless distance skipping; **Smash** mode topples bobbing apples & androids wave by wave, with a difficulty ramp, a cross-platform combo, and full on-watch sound (the PT2 speaker). No phone, no account. |
 
 Each app has its own `README.md` with build and setup details.
 
@@ -26,10 +27,11 @@ Each app has its own `README.md` with build and setup details.
 2. Open it with the Pebble (Core Devices) app on your phone — it sideloads onto a
    paired watch. Done; neither needs any configuration.
 
-### Atelier / Bauhaus Blocks / Kevinimal — prebuilt `.pbw` (no toolchain)
+### Atelier / Bauhaus Blocks / Kevinimal / Pebble Throw — prebuilt `.pbw` (no toolchain)
 Download the matching `.pbw` from the [**Releases**](../../releases) page and open
-it with the Pebble app. Atelier needs nothing; Bauhaus Blocks and Kevinimal pull
-live temperature from Open-Meteo over a connected phone (no account or key).
+it with the Pebble app. Atelier and Pebble Throw need nothing; Bauhaus Blocks and
+Kevinimal pull live temperature from Open-Meteo over a connected phone (no account
+or key).
 
 ### Voice Notes — build it yourself
 There is **no** prebuilt Voice Notes `.pbw`: your private Google Calendar bridge
