@@ -15,6 +15,14 @@ centre; everything else tucks into a corner. Pure black, high-contrast.
 | Bottom-left | chance of rain (blue drop + %) |
 | Bottom-right | current temp, with today's low / high below |
 
+## Themes
+
+Four colour themes, picked in the watchface **Settings** screen and persisted on
+the watch: **Kevin** (original dark), **Daylight** (light), **Amber** and
+**Mint**. See `store/banner-themes.png`.
+
+![themes](store/banner-themes.png)
+
 ## Weather
 
 From [Open-Meteo](https://open-meteo.com) (no API key). The phone-side JS

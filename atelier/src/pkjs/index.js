@@ -1,17 +1,14 @@
-// Phone-side companion for Kevinimal.
-// 1. Weather: Open-Meteo (no key) — current temp, today's hi/lo, rain chance.
-// 2. Settings: self-contained colour-theme picker (data-URI config page),
-//    persisted on the watch.
+// Phone-side companion for Atelier. Settings only: a self-contained colour-
+// theme picker (data-URI config page, no hosting / no external libs),
+// persisted on the watch.
 
-var API = 'https://api.open-meteo.com/v1/forecast';
-
-// Theme name + swatches (bg / primary text / accent), matching THEMES in
-// src/c/main.c. Indices MUST stay in sync.
+// Theme name + swatches (bg / ink / accent), matching THEMES in src/c/main.c.
+// Indices MUST stay in sync.
 var THEMES = [
-  { name: 'Kevin',    swatch: ['#000000', '#FFFFFF', '#55AAFF'] },
-  { name: 'Daylight', swatch: ['#FFFFFF', '#000000', '#0055AA'] },
-  { name: 'Amber',    swatch: ['#000000', '#FFFFFF', '#FFAA00'] },
-  { name: 'Mint',     swatch: ['#000000', '#FFFFFF', '#AAFFAA'] }
+  { name: 'Atelier', swatch: ['#FFFFFF', '#000000', '#FFAA00'] },
+  { name: 'Noir',    swatch: ['#000000', '#FFFFFF', '#FFAA00'] },
+  { name: 'Sage',    swatch: ['#FFFFFF', '#000000', '#00AA00'] },
+  { name: 'Blush',   swatch: ['#FFFFFF', '#000000', '#FF0055'] }
 ];
 
 function send(dict) {
@@ -19,43 +16,6 @@ function send(dict) {
     console.log('send failed: ' + JSON.stringify(e));
   });
 }
-
-function fetchWeather(lat, lon) {
-  var url = API + '?latitude=' + lat + '&longitude=' + lon +
-    '&current=temperature_2m' +
-    '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max' +
-    '&timezone=auto&forecast_days=1';
-
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.timeout = 15000;
-  xhr.onload = function () {
-    try {
-      var d = JSON.parse(xhr.responseText);
-      send({
-        TempNow: Math.round(d.current.temperature_2m),
-        TempHi:  Math.round(d.daily.temperature_2m_max[0]),
-        TempLo:  Math.round(d.daily.temperature_2m_min[0]),
-        Rain:    Math.round(d.daily.precipitation_probability_max[0])
-      });
-    } catch (e) {
-      send({ WErr: 1 });
-    }
-  };
-  xhr.onerror   = function () { send({ WErr: 1 }); };
-  xhr.ontimeout = function () { send({ WErr: 1 }); };
-  xhr.send();
-}
-
-function update() {
-  navigator.geolocation.getCurrentPosition(
-    function (pos) { fetchWeather(pos.coords.latitude, pos.coords.longitude); },
-    function ()    { fetchWeather(52.37, 4.89); },   // fallback: Amsterdam
-    { timeout: 15000, maximumAge: 600000 }
-  );
-}
-
-// --- settings -------------------------------------------------------------
 
 function currentTheme() {
   var n = parseInt(localStorage.getItem('theme'), 10);
@@ -95,7 +55,7 @@ function configPage(title, themes, sel) {
 }
 
 Pebble.addEventListener('showConfiguration', function () {
-  Pebble.openURL(configPage('Kevinimal', THEMES, currentTheme()));
+  Pebble.openURL(configPage('Atelier', THEMES, currentTheme()));
 });
 
 Pebble.addEventListener('webviewclosed', function (e) {
@@ -110,6 +70,3 @@ Pebble.addEventListener('webviewclosed', function (e) {
     console.log('config parse failed: ' + err);
   }
 });
-
-Pebble.addEventListener('ready', function () { update(); });
-Pebble.addEventListener('appmessage', function () { update(); });

@@ -16,6 +16,14 @@ type, hard edges, no gradients.
 | Battery | navy | battery glyph + percent |
 | Temperature | orange | current °C (large) + today's hi / lo |
 
+## Themes
+
+Four colour themes, picked in the watchface **Settings** screen and persisted on
+the watch: **Bauhaus** (original), **Noir** (greyscale), **Pop** (bold) and
+**Earth** (muted). See `store/banner-themes.png`.
+
+![themes](store/banner-themes.png)
+
 ## Weather
 
 Temperature comes from [Open-Meteo](https://open-meteo.com) (no API key). The

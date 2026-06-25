@@ -42,6 +42,24 @@ capture API) is confirmed working on the real watch via the Core Devices phone a
 - **Simulate a long-press:** `pebble emu-button push <btn>`, then (after >500 ms, e.g. as a
   separate command) `pebble emu-button release <btn>`. Do NOT use `click --duration` — it
   does not produce a real hold, so a `window_long_click_subscribe` handler never fires.
+- **`pebble send-app-message` does NOT reach the C inbox.** It is delivered to the phone-side
+  JS as an `appmessage` event (and without `--app-uuid` just pops a generic "Ping" modal over
+  the face). So you can't drive a settings-/AppMessage-controlled state (e.g. a theme picked in
+  the config page) from the CLI. To screenshot each such state, temporarily change the C default
+  (e.g. `static int s_theme = N;`), `build`/`install`/`screenshot` per value, then restore.
+
+## Watchface settings / config pages (no Clay needed)
+- Hand-roll the config page as a **`data:text/html,…` URI** built in `src/pkjs/index.js` and
+  opened with `Pebble.openURL` on `showConfiguration`; the page navigates to
+  `pebblejs://close#<encoded JSON>` on save → `webviewclosed` fires with `e.response`. The JS
+  then `Pebble.sendAppMessage` the choice to the watch, which `persist_write_int`s it. No
+  hosting, no `pebble-clay` npm dependency (so no `npm install` at build time). Needs
+  `"capabilities": ["configurable"]` in package.json or the Settings gear never appears.
+- **Colour tables in C:** use the integer macros `GColorXARGB8` (e.g. `GColorYellowARGB8`) in
+  `static const` palette arrays, then build colours at runtime with `(GColor){ .argb = … }`.
+  The bare `GColorX` compound literals are NOT valid array initializers here. (`GColorXARGB`
+  without the `8` does not exist — that mistake is easy if you grep with `[A-Za-z]+` and chop
+  the trailing digit.)
 
 ## Per-app layout
     <app>/

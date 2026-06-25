@@ -1,7 +1,7 @@
 {
   "name": "kevinimal",
   "author": "dhrme",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "keywords": ["pebble-app"],
   "private": true,
   "dependencies": {},
@@ -10,6 +10,7 @@
     "uuid": "3c355b62-ffd1-4892-ab02-5b16a2482f47",
     "sdkVersion": "3",
     "enableMultiJS": true,
+    "capabilities": ["configurable"],
     "targetPlatforms": ["emery"],
     "watchapp": {
       "watchface": true
@@ -19,7 +20,8 @@
       "TempHi",
       "TempLo",
       "Rain",
-      "WErr"
+      "WErr",
+      "Theme"
     ],
     "resources": {
       "media": [

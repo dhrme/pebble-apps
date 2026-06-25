@@ -1,7 +1,7 @@
 {
   "name": "atelier",
   "author": "dhrme",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": ["pebble-app"],
   "private": true,
   "dependencies": {},
@@ -9,13 +9,14 @@
     "displayName": "Atelier",
     "uuid": "666d6ac7-aa22-4882-a714-27968ad389fd",
     "sdkVersion": "3",
-    "enableMultiJS": false,
+    "enableMultiJS": true,
+    "capabilities": ["configurable"],
     "targetPlatforms": ["emery"],
     "watchapp": {
       "watchface": true
     },
     "messageKeys": [
-      "dummy"
+      "Theme"
     ],
     "resources": {
       "media": [

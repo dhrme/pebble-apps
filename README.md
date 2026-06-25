@@ -11,9 +11,9 @@ released under the MIT license — fork, build, and sideload freely.
 |---|---|
 | [**NL Energy**](energy/) | A launchable **app**: the current Dutch dynamic electricity price (big, colour-coded), a 24-hour forward graph, and the cheapest contiguous 4-hour window. Pulls live prices from the public EnergyZero API — no account or key. |
 | [**Dutch Energy Watchface**](energy-watchface/) | A glanceable **watchface**: time + date + an iPhone-style battery, a LOW/MED/HIGH price split, the current ct, and the next cheap window. Same EnergyZero feed as NL Energy. |
-| [**Atelier**](atelier/) | A minimalist analog **watchface**: a clean white dial, black hands, a single orange marker at twelve, and a quiet lower band with date + battery. |
-| [**Bauhaus Blocks**](blocks/) | A bold colour-block **watchface**: five flat bands — weekday, date, a big clock, battery, and the current temperature with today's hi/lo. Live temp from [Open-Meteo](https://open-meteo.com) (no key). |
-| [**Kevinimal**](kevinimal/) | A minimalist **watchface**: large centred time on pure black, with day/date, a battery as three blocks, chance of rain, and current temp + hi/lo tucked into the corners. Open-Meteo (no key). |
+| [**Atelier**](atelier/) | A minimalist analog **watchface**: a clean white dial, black hands, a single orange marker at twelve, and a quiet lower band with date + battery. 4 colour themes (Atelier / Noir / Sage / Blush) in Settings. |
+| [**Bauhaus Blocks**](blocks/) | A bold colour-block **watchface**: five flat bands — weekday, date, a big clock, battery, and the current temperature with today's hi/lo. Live temp from [Open-Meteo](https://open-meteo.com) (no key). 4 colour themes (Bauhaus / Noir / Pop / Earth) in Settings. |
+| [**Kevinimal**](kevinimal/) | A minimalist **watchface**: large centred time on pure black, with day/date, a battery as three blocks, chance of rain, and current temp + hi/lo tucked into the corners. Open-Meteo (no key). 4 colour themes (Kevin / Daylight / Amber / Mint) in Settings. |
 | [**Voice Notes**](voice-notes/) | Dictate a quick note on the watch; keep a running list. Optionally bridges a note to Google Calendar via a tiny self-hosted Google Apps Script (your own deployment, your own shared secret — see [`voice-notes/bridge/`](voice-notes/bridge/)). |
 
 Each app has its own `README.md` with build and setup details.
