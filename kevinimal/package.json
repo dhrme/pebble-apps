@@ -1,0 +1,33 @@
+{
+  "name": "kevinimal",
+  "author": "dhrme",
+  "version": "1.0.2",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Kevinimal",
+    "uuid": "3c355b62-ffd1-4892-ab02-5b16a2482f47",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": ["emery"],
+    "watchapp": {
+      "watchface": true
+    },
+    "messageKeys": [
+      "TempNow",
+      "TempHi",
+      "TempLo",
+      "Rain",
+      "WErr"
+    ],
+    "resources": {
+      "media": [
+        { "type": "font", "name": "FONT_TIME_64", "file": "fonts/Poppins-Bold.ttf", "characterRegex": "[0-9:]" },
+        { "type": "font", "name": "FONT_DAY_20",  "file": "fonts/Poppins-Bold.ttf", "characterRegex": "[A-Z]" },
+        { "type": "font", "name": "FONT_CUR_22",  "file": "fonts/Poppins-Bold.ttf", "characterRegex": "[0-9°-]" },
+        { "type": "font", "name": "FONT_SUB_14",  "file": "fonts/Poppins-Bold.ttf", "characterRegex": "[0-9 /%°-]" }
+      ]
+    }
+  }
+}
